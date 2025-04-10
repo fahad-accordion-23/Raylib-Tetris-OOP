@@ -25,19 +25,28 @@ void Block::move(int columns, int rows)
     position.y += rows;
 }
 
-//
-//void Block::rotate(Direction dir)
-//{
-//    if (dir == LEFT)
-//    {
-//        rotationState -= 1;
-//        rotationState %= 4;
-//    }
-//    else if (dir == RIGHT)
-//    {
-//        rotationState += 1;
-//        rotationState %= 4;
-//    }
-//    else
-//        return;
-//}
+Position Block::getPosition()
+{
+    return position;
+}
+
+Position* Block::getShape()
+{
+    return shape[rotationState];
+}
+
+void Block::rotate(Direction dir)
+{
+    if (dir == LEFT)
+    {
+        rotationState -= 1;
+        rotationState %= 4;
+    }
+    else if (dir == RIGHT)
+    {
+        rotationState += 1;
+        rotationState %= 4;
+    }
+    else
+        return;
+}

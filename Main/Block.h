@@ -24,4 +24,7 @@ public:
     Block(Position position, uint rotationState, uint cellSize, COLOUR colour, Position (*shape)[4]);
     void draw();
     void move(int rows, int columns);
+    Position getPosition();
+    Position* getShape();
+    void rotate(Direction dir);
 };

@@ -1,55 +1,22 @@
-#pragma once
+#ifndef COLOUR_H
+#define COLOUR_H
+
 #include <raylib.h>
 
-#ifdef DARK_GREY
-#undef DARK_GREY
-#endif // DARK_GREY
-
-#ifdef GREEN
-#undef GREEN
-#endif // GREEN
-
-#ifdef RED
-#undef RED
-#endif // RED
-
-#ifdef ORANGE
-#undef ORANGE
-#endif // ORANGE
-
-#ifdef YELLOW
-#undef YELLOW
-#endif // YELLOW
-
-#ifdef PURPLE
-#undef PURPLE
-#endif // PURPLE
-
-#ifdef CYAN
-#undef CYAN
-#endif // CYAN
-
-#ifdef BLUE
-#undef BLUE
-#endif // BLUE
-
-#ifdef BLACK
-#undef BLACK
-#endif BLACK
-
-/* Order of colours stored */
+const unsigned int TOTAL_COLOURS = 9;
 enum COLOUR
 {
-    DARK_GREY,
-    GREEN,
-    RED,
-    ORANGE,
-    YELLOW,
-    PURPLE,
-    CYAN,
-    BLUE,
-    BLACK
+    C_DARK_GREY,
+    C_GREEN,
+    C_RED,
+    C_ORANGE,
+    C_YELLOW,
+    C_PURPLE,
+    C_CYAN,
+    C_BLUE,
+    C_BLACK
 };
+extern Color COLOURS[TOTAL_COLOURS];
+extern void initializeColours();
 
-/* Colour data */
-extern const Color COLOURS[9];
+#endif

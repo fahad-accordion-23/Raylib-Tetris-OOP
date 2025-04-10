@@ -17,7 +17,7 @@ void Grid::initialize()
 {
     for (uint j = 0; j < ROWS; j += 1)
         for (uint i = 0; i < COLS; i += 1)
-            grid[j][i] = COLOUR::DARK_GREY;
+            grid[j][i] = COLOUR::C_DARK_GREY;
 }
 
 uint Grid::getCellSize()

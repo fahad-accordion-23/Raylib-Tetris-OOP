@@ -20,6 +20,7 @@ int main()
     SetTargetFPS(FPS);
 
     // Objects init
+    initializeColours();
     Grid grid = Grid(WIDTH, HEIGHT);
     BlockMaker bmaker(grid.getCellSize());
     Block myBlock = bmaker.createRandomBlock();
@@ -28,7 +29,7 @@ int main()
     {
         BeginDrawing();
 
-        ClearBackground(COLOURS[BLACK]);
+        ClearBackground(COLOURS[C_BLACK]);
         grid.draw();
         myBlock.draw();
 

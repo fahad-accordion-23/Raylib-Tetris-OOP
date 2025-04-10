@@ -55,31 +55,31 @@ BlockMaker::BlockMaker(uint cellSize)
 }
 
 Block BlockMaker::createLBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::ORANGE, LShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_ORANGE, LShape);
 }
 
 Block BlockMaker::createJBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::BLUE, JShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_BLUE, JShape);
 }
 
 Block BlockMaker::createIBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::CYAN, IShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_CYAN, IShape);
 }
 
 Block BlockMaker::createTBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::PURPLE, TShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_PURPLE, TShape);
 }
 
 Block BlockMaker::createSBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::GREEN, SShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_GREEN, SShape);
 }
 
 Block BlockMaker::createZBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::RED, ZShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_RED, ZShape);
 }
 
 Block BlockMaker::createOBlock() {
-    return Block({ 4, 0 }, 0, cellSize, COLOUR::YELLOW, OShape);
+    return Block({ 4, 0 }, 0, cellSize, COLOUR::C_YELLOW, OShape);
 }
 
 Block BlockMaker::createRandomBlock() 

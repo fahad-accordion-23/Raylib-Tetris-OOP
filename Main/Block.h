@@ -1,6 +1,5 @@
 #pragma once
 
-#include <map>
 #include "Colour.h"
 #include "Position.h"
 typedef unsigned int uint;

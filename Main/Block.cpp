@@ -1,7 +1,7 @@
 #include "Block.h"
 
 Block::Block()
-    : position({0, 0}), cellSize(0), rotationState(0), colour(COLOUR::BLACK), shape(nullptr)
+    : position({0, 0}), cellSize(0), rotationState(0), colour(COLOUR::C_BLACK), shape(nullptr)
 {
 }
 

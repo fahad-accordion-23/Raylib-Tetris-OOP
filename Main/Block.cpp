@@ -30,19 +30,19 @@ Position Block::getPosition()
     return position;
 }
 
-Position* Block::getShape()
+const Position* Block::getShape()
 {
     return shape[rotationState];
 }
 
 void Block::rotate(Direction dir)
 {
-    if (dir == LEFT)
+    if (dir == Direction::LEFT)
     {
         rotationState -= 1;
         rotationState %= 4;
     }
-    else if (dir == RIGHT)
+    else if (dir == Direction::RIGHT)
     {
         rotationState += 1;
         rotationState %= 4;

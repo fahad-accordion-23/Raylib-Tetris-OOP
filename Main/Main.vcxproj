@@ -130,6 +130,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockMaker.cpp" />
     <ClCompile Include="Colour.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Position.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockMaker.h" />
     <ClInclude Include="Colour.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Position.h" />
   </ItemGroup>

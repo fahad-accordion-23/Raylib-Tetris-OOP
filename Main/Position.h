@@ -4,7 +4,7 @@ typedef unsigned int uint;
 
 struct Position
 {
-    uint x, y;
+    int x, y;
 
-    Position(uint x, uint y);
+    Position(int x = 0, int y = 0);
 };

@@ -11,6 +11,7 @@ typedef unsigned int uint;
 typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::time_point<Clock> TimePoint;
 typedef std::chrono::milliseconds Milliseconds;
+using std::chrono::duration_cast;
 
 constexpr uint
 WIDTH = 450,
@@ -23,8 +24,9 @@ private:
     Grid grid;
     BlockMaker blockMaker;
     Block currentBlock;
-    TimePoint lastDropTime, lastMoveTime, lastRotateTime;
-    Milliseconds softDropDelay, hardDropDelay, moveDelay, rotateDelay;
+    TimePoint lastDropTime, lastMoveTime, lastRotateTime, lastTouchDownTime;
+    Milliseconds softDropDelay, hardDropDelay, moveDelay, rotateDelay, lockDelay;
+    bool hasBottomCollided;
 
     bool bottomCollision();
     bool isBlockColliding();

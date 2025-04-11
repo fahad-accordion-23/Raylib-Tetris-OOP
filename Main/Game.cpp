@@ -36,26 +36,12 @@ bool Game::isBlockColliding()
     return false;
 }
 
-Game::Game()
-    : grid(WIDTH, HEIGHT), blockMaker(grid.getCellSize()), softDropDelay(300), hardDropDelay(100), moveDelay(150), rotateDelay(200)
-{
-    std::srand(Clock::now().time_since_epoch().count());
-    InitWindow(WIDTH, HEIGHT, "Raylib Tetris");
-    SetTargetFPS(FPS);
-    initializeColours();
-    createRandomBlock();
-
-    lastDropTime = Clock::now() - hardDropDelay;
-    lastMoveTime = Clock::now() - moveDelay;
-    lastRotateTime = Clock::now() - rotateDelay;
-}
-
 void Game::handleEvents()
 {
     TimePoint now = Clock::now();
-    Milliseconds elapsedSinceLastDrop = std::chrono::duration_cast<Milliseconds>(now - lastDropTime);
-    Milliseconds elapsedSinceLastMove = std::chrono::duration_cast<Milliseconds>(now - lastMoveTime);
-    Milliseconds elapsedSinceLastRotate = std::chrono::duration_cast<Milliseconds>(now - lastRotateTime);
+    Milliseconds elapsedSinceLastDrop = duration_cast<Milliseconds>(now - lastDropTime);
+    Milliseconds elapsedSinceLastMove = duration_cast<Milliseconds>(now - lastMoveTime);
+    Milliseconds elapsedSinceLastRotate = duration_cast<Milliseconds>(now - lastRotateTime);
 
     if (IsKeyDown(KEY_LEFT))
     {
@@ -99,7 +85,7 @@ void Game::handleEvents()
         {
             moveBlock(Direction::DOWN);
             lastDropTime = now;
-            elapsedSinceLastDrop = std::chrono::duration_cast<Milliseconds>(now - lastDropTime);
+            elapsedSinceLastDrop = duration_cast<Milliseconds>(now - lastDropTime);
         }
     }
     else
@@ -112,37 +98,6 @@ void Game::handleEvents()
     }
 }
 
-void Game::run()
-{
-    TimePoint start;
-    Milliseconds elapsed;
-    uint frames = 0;
-
-    start = Clock::now();
-    while (WindowShouldClose() == false)
-    {
-        BeginDrawing();
-
-        ClearBackground(COLOURS[C_BLACK]);
-        grid.draw();
-        handleEvents();
-        currentBlock.draw();
-
-        EndDrawing();
-        frames++;
-
-        elapsed = std::chrono::duration_cast<Milliseconds>(Clock::now() - start);
-        if (elapsed >= Milliseconds(1000))
-        {
-            std::cout << frames << " frames per second" << std::endl;
-            start = Clock::now();
-            frames = 0;
-        }
-    }
-
-    CloseWindow();
-}
-
 void Game::createRandomBlock()
 {
     currentBlock = blockMaker.createRandomBlock();
@@ -153,13 +108,26 @@ void Game::moveBlock(Direction dir)
     bool isBottomColliding = bottomCollision();
     if (isBottomColliding)
     {
-        for (uint i = 0; i < 4; i += 1)
+        if (!hasBottomCollided)
         {
-            Position pos = currentBlock.getShape()[i];
-            grid.grid[pos.y + currentBlock.getPosition().y][pos.x + currentBlock.getPosition().x] = currentBlock.getColour();
+            lastTouchDownTime = Clock::now();
+            hasBottomCollided = true;
         }
-        createRandomBlock();
+
+        Milliseconds beenTouchingFor = duration_cast<Milliseconds>(Clock::now() - lastTouchDownTime);
+        if (beenTouchingFor >= lockDelay)
+        {
+            for (uint i = 0; i < 4; i += 1)
+            {
+                Position pos = currentBlock.getShape()[i];
+                grid.grid[pos.y + currentBlock.getPosition().y][pos.x + currentBlock.getPosition().x] = currentBlock.getColour();
+            }
+            createRandomBlock();
+            hasBottomCollided = false;
+        }
     }
+    else
+        hasBottomCollided = false;
 
     if (dir == Direction::LEFT)
         currentBlock.move(-1, 0);
@@ -196,4 +164,51 @@ void Game::rotateBlock(Direction dir)
         else if (dir == Direction::RIGHT)
             currentBlock.rotate(Direction::LEFT);
     }
+}
+
+Game::Game()
+    : grid(WIDTH, HEIGHT), blockMaker(grid.getCellSize()), softDropDelay(300),
+    hardDropDelay(100), moveDelay(150), rotateDelay(200), lockDelay(500),
+    hasBottomCollided(false)
+{
+    std::srand(Clock::now().time_since_epoch().count());
+    InitWindow(WIDTH, HEIGHT, "Raylib Tetris");
+    SetTargetFPS(FPS);
+    initializeColours();
+    createRandomBlock();
+
+    lastDropTime = Clock::now() - hardDropDelay;
+    lastMoveTime = Clock::now() - moveDelay;
+    lastRotateTime = Clock::now() - rotateDelay;
+}
+
+void Game::run()
+{
+    TimePoint start;
+    Milliseconds elapsed;
+    uint frames = 0;
+
+    start = Clock::now();
+    while (WindowShouldClose() == false)
+    {
+        BeginDrawing();
+
+        ClearBackground(COLOURS[C_BLACK]);
+        grid.draw();
+        handleEvents();
+        currentBlock.draw();
+
+        EndDrawing();
+        frames++;
+
+        elapsed = duration_cast<Milliseconds>(Clock::now() - start);
+        if (elapsed >= Milliseconds(1000))
+        {
+            std::cout << frames << " frames per second" << std::endl;
+            start = Clock::now();
+            frames = 0;
+        }
+    }
+
+    CloseWindow();
 }

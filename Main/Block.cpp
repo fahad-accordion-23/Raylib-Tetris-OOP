@@ -50,3 +50,8 @@ void Block::rotate(Direction dir)
     else
         return;
 }
+
+COLOUR Block::getColour()
+{
+    return colour;
+}

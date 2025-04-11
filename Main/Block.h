@@ -29,4 +29,5 @@ public:
     Position getPosition();
     const Position* getShape();
     void rotate(Direction dir);
+    COLOUR getColour();
 };

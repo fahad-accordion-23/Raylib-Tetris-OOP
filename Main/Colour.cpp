@@ -10,5 +10,7 @@ void initializeColours()
     COLOURS[C_YELLOW] = { 237, 234, 4, 255 };  
     COLOURS[C_PURPLE] = { 166, 0, 247, 255 };  
     COLOURS[C_CYAN] = { 21, 204, 209, 255 };   
-    COLOURS[C_BLUE] = { 13, 64, 216, 255 };    
+    COLOURS[C_BLUE] = { 13, 64, 216, 255 };
+    COLOURS[C_DARK_EGGPLANT_PURPLE] = { 49, 0, 26, 255 };
+    COLOURS[C_BLACK] = { 0, 0, 0, 255 };
 }

@@ -16,6 +16,9 @@ using std::chrono::duration_cast;
 constexpr uint
 WIDTH = 450,
 HEIGHT = 900,
+PADDING = 20,
+WINDOW_WIDTH = WIDTH * 1.75f + PADDING,
+WINDOW_HEIGHT = HEIGHT + PADDING + PADDING,
 FPS = 60;
 
 class Game

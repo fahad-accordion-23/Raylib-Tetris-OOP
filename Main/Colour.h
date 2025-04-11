@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 
-const unsigned int TOTAL_COLOURS = 9;
+const unsigned int TOTAL_COLOURS = 10;
 enum COLOUR
 {
     C_DARK_GREY,
@@ -14,6 +14,7 @@ enum COLOUR
     C_PURPLE,
     C_CYAN,
     C_BLUE,
+    C_DARK_EGGPLANT_PURPLE,
     C_BLACK
 };
 extern Color COLOURS[TOTAL_COLOURS];

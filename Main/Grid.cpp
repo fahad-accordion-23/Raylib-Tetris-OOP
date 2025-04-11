@@ -1,6 +1,7 @@
 #include "Grid.h"
 
-Grid::Grid(uint windowWidth, uint windowHeight)
+Grid::Grid(uint windowWidth, uint windowHeight, Position position)
+    : position(position)
 {
     float w2h = (float)windowWidth / windowHeight;
     float c2r = (float)COLS / ROWS;
@@ -11,6 +12,11 @@ Grid::Grid(uint windowWidth, uint windowHeight)
         cellSize = windowWidth / COLS;
 
     initialize();
+}
+
+void Grid::setPosition(Position position)
+{
+    this->position = position;
 }
 
 void Grid::initialize()
@@ -27,10 +33,11 @@ uint Grid::getCellSize()
 
 void Grid::draw()
 {
+    DrawRectangle(position.x, position.y, cellSize * COLS, cellSize * ROWS, COLOURS[C_BLACK]);
     for (uint j = 0; j < ROWS; j += 1)
         for (uint i = 0; i < COLS; i += 1)
         {
             COLOUR cellColour = grid[j][i];
-            DrawRectangle(i * cellSize + 1, j * cellSize + 1, cellSize - 1, cellSize - 1, COLOURS[cellColour]);
+            DrawRectangle(i * cellSize + 1 + position.x, j * cellSize + 1 + position.y, cellSize - 1, cellSize - 1, COLOURS[cellColour]);
         }
 }

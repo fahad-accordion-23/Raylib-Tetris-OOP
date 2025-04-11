@@ -49,37 +49,37 @@ Position BlockMaker::OShape[4][4] = {
     {Position{0, 0}, Position{0, 1}, Position{1, 0}, Position{1, 1}} 
 };
 
-BlockMaker::BlockMaker(uint cellSize)
-    : cellSize(cellSize)
+BlockMaker::BlockMaker(uint cellSize, Position offset)
+    : cellSize(cellSize), offset(offset)
 {
 }
 
 Block BlockMaker::createLBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_ORANGE, LShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_ORANGE, LShape, { offset.x, offset.y });
 }
 
 Block BlockMaker::createJBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_BLUE, JShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_BLUE, JShape, { offset.x, offset.y });
 }
 
 Block BlockMaker::createIBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_CYAN, IShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_CYAN, IShape, { offset.x, offset.y });
 }
 
 Block BlockMaker::createTBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_PURPLE, TShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_PURPLE, TShape, { offset.x, offset.y });
 }
 
 Block BlockMaker::createSBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_GREEN, SShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_GREEN, SShape, { offset.x, offset.y });
 }
 
 Block BlockMaker::createZBlock() {
-    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_RED, ZShape);
+    return Block({ 3, 0 }, 0, cellSize, COLOUR::C_RED, ZShape, { offset.x, offset.y });
 }
 
 Block BlockMaker::createOBlock() {
-    return Block({ 4, 0 }, 0, cellSize, COLOUR::C_YELLOW, OShape);
+    return Block({ 4, 0 }, 0, cellSize, COLOUR::C_YELLOW, OShape, { offset.x, offset.y });
 }
 
 Block BlockMaker::createRandomBlock() 

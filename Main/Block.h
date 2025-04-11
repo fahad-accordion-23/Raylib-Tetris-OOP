@@ -20,10 +20,11 @@ protected:
     COLOUR colour;
     const Position (*shape)[4];
     Position position;
+    Position offset;
 
 public:
     Block();
-    Block(Position position, uint rotationState, uint cellSize, COLOUR colour, Position (*shape)[4]);
+    Block(Position position, uint rotationState, uint cellSize, COLOUR colour, Position(*shape)[4], Position offset = { 0, 0 });
     void draw();
     void move(int columns, int rows);
     Position getPosition();

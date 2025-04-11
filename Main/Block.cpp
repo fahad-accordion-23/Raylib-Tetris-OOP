@@ -5,8 +5,8 @@ Block::Block()
 {
 }
 
-Block::Block(Position position, uint rotationState, uint cellSize, COLOUR colour, Position (*shape)[4])
-    : position(position), cellSize(cellSize), rotationState(rotationState), colour(colour), shape(shape)
+Block::Block(Position position, uint rotationState, uint cellSize, COLOUR colour, Position (*shape)[4], Position offset)
+    : offset(offset), position(position), cellSize(cellSize), rotationState(rotationState), colour(colour), shape(shape)
 {
 }
 
@@ -16,7 +16,7 @@ void Block::draw()
     {
         uint x = shape[rotationState][i].x + position.x;
         uint y = shape[rotationState][i].y + position.y;
-        DrawRectangle(x * cellSize + 1, y * cellSize + 1, cellSize - 1, cellSize - 1, COLOURS[colour]);
+        DrawRectangle(x * cellSize + 1 + offset.x, y * cellSize + 1 + offset.y, cellSize - 1, cellSize - 1, COLOURS[colour]);
     }
 }
 void Block::move(int columns, int rows)

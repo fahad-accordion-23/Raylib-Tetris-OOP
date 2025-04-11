@@ -13,10 +13,11 @@ private:
     static Position ZShape[4][4];
     static Position OShape[4][4];
     uint cellSize;
+    Position offset;
 
 public:
     BlockMaker() = delete;
-    BlockMaker(uint cellSize);
+    BlockMaker(uint cellSize, Position offset = { 0, 0 });
     Block createLBlock();
     Block createJBlock();
     Block createIBlock();

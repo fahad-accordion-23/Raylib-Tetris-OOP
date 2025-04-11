@@ -2,7 +2,6 @@
 
 #include <raylib.h>
 #include <cstdlib>
-#include <time.h>
 #include <chrono>
 #include "Colour.h"
 #include "Grid.h"
@@ -27,14 +26,15 @@ private:
     TimePoint lastDropTime, lastMoveTime, lastRotateTime;
     Milliseconds softDropDelay, hardDropDelay, moveDelay, rotateDelay;
 
+    bool bottomCollision();
     bool isBlockColliding();
-public:
-    Game();
-
-    void handleEvents();
-    void run();
     void createRandomBlock();
     void moveBlock(Direction dir);
     void rotateBlock(Direction dir);
+    void handleEvents();
+
+public:
+    Game();
+    void run();
 };
 

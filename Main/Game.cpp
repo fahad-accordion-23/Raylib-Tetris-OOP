@@ -1,7 +1,9 @@
 #include "Game.h"
 #include <iostream>
 
-// checks collision of the bottom of each of the 4 squares of the block with other cells and the bottom of the grid
+/* checks collision of the bottom of each of the 4 squares of the block 
+ * with other cells and the bottom of the grid
+ */
 bool Game::bottomCollision()
 {
     Position pos;
@@ -39,9 +41,9 @@ bool Game::isBlockColliding()
 void Game::handleEvents()
 {
     TimePoint now = Clock::now();
-    Milliseconds elapsedSinceLastDrop = duration_cast<Milliseconds>(now - lastDropTime);
-    Milliseconds elapsedSinceLastMove = duration_cast<Milliseconds>(now - lastMoveTime);
-    Milliseconds elapsedSinceLastRotate = duration_cast<Milliseconds>(now - lastRotateTime);
+    MS elapsedSinceLastDrop = duration_cast<MS>(now - lastDropTime);
+    MS elapsedSinceLastMove = duration_cast<MS>(now - lastMoveTime);
+    MS elapsedSinceLastRotate = duration_cast<MS>(now - lastRotateTime);
 
     if (IsKeyDown(KEY_LEFT))
     {
@@ -85,7 +87,7 @@ void Game::handleEvents()
         {
             moveBlock(Direction::DOWN);
             lastDropTime = now;
-            elapsedSinceLastDrop = duration_cast<Milliseconds>(now - lastDropTime);
+            elapsedSinceLastDrop = duration_cast<MS>(now - lastDropTime);
         }
     }
     else
@@ -98,6 +100,48 @@ void Game::handleEvents()
     }
 }
 
+bool Game::clearLines()
+{
+    bool rval = false;
+    bool completeRows[20] = { 0 };
+    for (int j = ROWS - 1; j >= 0; j -= 1)
+    {
+        completeRows[j] = true;
+        for (uint i = 0; i < COLS; i += 1)
+        {
+            if (grid.grid[j][i] == C_DARK_GREY)
+            {
+                completeRows[j] = false;
+                break;
+            }
+        }
+    }
+
+    for (int j = ROWS - 1, n = ROWS - 2; n >= 0 && j >= 0; )
+    {
+        if (completeRows[j])
+        {
+            rval = true;
+            if (completeRows[n])
+                n -= 1;
+            else
+            {
+                for (uint i = 0; i < COLS; i += 1)
+                    grid.grid[j][i] = grid.grid[n][i];
+                j -= 1;
+                completeRows[n] = true;
+            }
+        }
+        else
+        {
+            j -= 1;
+            n -= 1;
+        }
+    }
+
+    return rval;
+}
+
 void Game::createRandomBlock()
 {
     currentBlock = blockMaker.createRandomBlock();
@@ -105,37 +149,13 @@ void Game::createRandomBlock()
 
 void Game::moveBlock(Direction dir)
 {
-    bool isBottomColliding = bottomCollision();
-    if (isBottomColliding)
-    {
-        if (!hasBottomCollided)
-        {
-            lastTouchDownTime = Clock::now();
-            hasBottomCollided = true;
-        }
-
-        Milliseconds beenTouchingFor = duration_cast<Milliseconds>(Clock::now() - lastTouchDownTime);
-        if (beenTouchingFor >= lockDelay)
-        {
-            for (uint i = 0; i < 4; i += 1)
-            {
-                Position pos = currentBlock.getShape()[i];
-                grid.grid[pos.y + currentBlock.getPosition().y][pos.x + currentBlock.getPosition().x] = currentBlock.getColour();
-            }
-            createRandomBlock();
-            hasBottomCollided = false;
-        }
-    }
-    else
-        hasBottomCollided = false;
-
     if (dir == Direction::LEFT)
         currentBlock.move(-1, 0);
     else if (dir == Direction::RIGHT)
         currentBlock.move(+1, 0);
     else if (dir == Direction::UP)
         currentBlock.move(0, -1);
-    else if (dir == Direction::DOWN && !isBottomColliding)
+    else if (dir == Direction::DOWN && !bottomCollision())
         currentBlock.move(0, +1);
 
     bool isCollidng = isBlockColliding();
@@ -148,6 +168,38 @@ void Game::moveBlock(Direction dir)
         else if (dir == Direction::UP)
             currentBlock.move(0, +1);
     }
+}
+
+bool Game::blockLockCheck()
+{
+    if (bottomCollision())
+    {
+        if (!hasBottomCollided)
+        {
+            lastTouchDownTime = Clock::now();
+            hasBottomCollided = true;
+        }
+
+        MS beenTouchingFor = duration_cast<MS>(Clock::now() - lastTouchDownTime);
+        if (beenTouchingFor >= lockDelay)
+        {
+            return true;
+        }
+    }
+    else
+        return false;
+}
+
+void Game::lockBlock()
+{
+    for (uint i = 0; i < 4; i += 1)
+    {
+        Position pos = currentBlock.getShape()[i];
+        pos.y += currentBlock.getPosition().y;
+        pos.x += currentBlock.getPosition().x;
+        grid.grid[pos.y][pos.x] = currentBlock.getColour();
+    }
+    hasBottomCollided = false;
 }
 
 void Game::rotateBlock(Direction dir)
@@ -185,24 +237,38 @@ Game::Game()
 void Game::run()
 {
     TimePoint start;
-    Milliseconds elapsed;
+    MS elapsed;
     uint frames = 0;
 
     start = Clock::now();
-    while (WindowShouldClose() == false)
+    while (!WindowShouldClose())
     {
         BeginDrawing();
 
         ClearBackground(COLOURS[C_BLACK]);
+        clearLines();
         grid.draw();
-        handleEvents();
-        currentBlock.draw();
+        if (!gameOver)
+        {
+            handleEvents();
+            if (blockLockCheck())
+            {
+                lockBlock();
+                createRandomBlock();
+                if (isBlockColliding())
+                {
+                    gameOver = true;
+                    lockBlock();
+                }
+            }
+            currentBlock.draw();
+        }
 
         EndDrawing();
         frames++;
 
-        elapsed = duration_cast<Milliseconds>(Clock::now() - start);
-        if (elapsed >= Milliseconds(1000))
+        elapsed = duration_cast<MS>(Clock::now() - start);
+        if (elapsed >= MS(1000))
         {
             std::cout << frames << " frames per second" << std::endl;
             start = Clock::now();

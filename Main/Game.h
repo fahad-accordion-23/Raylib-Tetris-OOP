@@ -10,7 +10,7 @@
 typedef unsigned int uint;
 typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::time_point<Clock> TimePoint;
-typedef std::chrono::milliseconds Milliseconds;
+typedef std::chrono::milliseconds MS;
 using std::chrono::duration_cast;
 
 constexpr uint
@@ -25,15 +25,19 @@ private:
     BlockMaker blockMaker;
     Block currentBlock;
     TimePoint lastDropTime, lastMoveTime, lastRotateTime, lastTouchDownTime;
-    Milliseconds softDropDelay, hardDropDelay, moveDelay, rotateDelay, lockDelay;
+    MS softDropDelay, hardDropDelay, moveDelay, rotateDelay, lockDelay;
     bool hasBottomCollided;
+    bool gameOver;
 
     bool bottomCollision();
     bool isBlockColliding();
     void createRandomBlock();
     void moveBlock(Direction dir);
+    bool blockLockCheck();
+    void lockBlock();
     void rotateBlock(Direction dir);
     void handleEvents();
+    bool clearLines();
 
 public:
     Game();

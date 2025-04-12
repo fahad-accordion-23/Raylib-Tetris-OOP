@@ -42,7 +42,7 @@ private:
     void lockBlock();
     void rotateBlock(Direction dir);
     void handleEvents();
-    bool clearLines();
+    uint clearLines();
 
 public:
     Game();

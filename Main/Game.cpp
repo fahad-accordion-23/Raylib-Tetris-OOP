@@ -100,9 +100,9 @@ void Game::handleEvents()
     }
 }
 
-bool Game::clearLines()
+uint Game::clearLines()
 {
-    bool rval = false;
+    uint cleared = 0;
     bool completeRows[20] = { 0 };
     for (int j = ROWS - 1; j >= 0; j -= 1)
     {
@@ -115,13 +115,15 @@ bool Game::clearLines()
                 break;
             }
         }
+
+        if (completeRows[j])
+            cleared += 1;
     }
 
     for (int j = ROWS - 1, n = ROWS - 2; n >= 0 && j >= 0; )
     {
         if (completeRows[j])
         {
-            rval = true;
             if (completeRows[n])
                 n -= 1;
             else
@@ -139,7 +141,7 @@ bool Game::clearLines()
         }
     }
 
-    return rval;
+    return cleared;
 }
 
 void Game::createRandomBlock()
@@ -252,7 +254,7 @@ void Game::run()
         BeginDrawing();
 
         ClearBackground(COLOURS[C_DARK_EGGPLANT_PURPLE]);
-        clearLines();
+        scoreBoard.addScore(clearLines() * 100);
         grid.draw();
         scoreBoard.draw();
         if (!gameOver)

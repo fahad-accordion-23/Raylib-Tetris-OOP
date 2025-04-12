@@ -219,15 +219,21 @@ void Game::rotateBlock(Direction dir)
 }
 
 Game::Game()
-    : grid(WIDTH, HEIGHT, { PADDING, PADDING }), blockMaker(grid.getCellSize(), { PADDING, PADDING }), softDropDelay(300),
-    hardDropDelay(100), moveDelay(150), rotateDelay(200), lockDelay(500),
-    hasBottomCollided(false)
+    : grid(WIDTH, HEIGHT, { PADDING, PADDING }), blockMaker(grid.getCellSize(), { PADDING, PADDING }), 
+    softDropDelay(300), hardDropDelay(100), moveDelay(150), rotateDelay(200), 
+    lockDelay(500), hasBottomCollided(false)
 {
     std::srand(Clock::now().time_since_epoch().count());
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raylib Tetris");
     SetTargetFPS(FPS);
     initializeColours();
     createRandomBlock();
+
+    scoreBoard.initialize(
+        { PADDING + WIDTH + PADDING, PADDING },
+        WINDOW_WIDTH - PADDING - WIDTH - PADDING - PADDING,
+        WINDOW_HEIGHT - PADDING - PADDING
+    );
 
     lastDropTime = Clock::now() - hardDropDelay;
     lastMoveTime = Clock::now() - moveDelay;
@@ -248,6 +254,7 @@ void Game::run()
         ClearBackground(COLOURS[C_DARK_EGGPLANT_PURPLE]);
         clearLines();
         grid.draw();
+        scoreBoard.draw();
         if (!gameOver)
         {
             handleEvents();

@@ -6,6 +6,7 @@
 #include "Colour.h"
 #include "Grid.h"
 #include "BlockMaker.h"
+#include "ScoreBoard.h"
 
 typedef unsigned int uint;
 typedef std::chrono::high_resolution_clock Clock;
@@ -17,7 +18,7 @@ constexpr uint
 WIDTH = 450,
 HEIGHT = 900,
 PADDING = 20,
-WINDOW_WIDTH = WIDTH * 1.75f + PADDING,
+WINDOW_WIDTH = WIDTH * 1.75f + PADDING + PADDING,
 WINDOW_HEIGHT = HEIGHT + PADDING + PADDING,
 FPS = 60;
 
@@ -29,6 +30,7 @@ private:
     Block currentBlock;
     TimePoint lastDropTime, lastMoveTime, lastRotateTime, lastTouchDownTime;
     MS softDropDelay, hardDropDelay, moveDelay, rotateDelay, lockDelay;
+    ScoreBoard scoreBoard;
     bool hasBottomCollided;
     bool gameOver;
 

@@ -45,6 +45,19 @@ void Game::handleEvents()
     MS elapsedSinceLastMove = duration_cast<MS>(now - lastMoveTime);
     MS elapsedSinceLastRotate = duration_cast<MS>(now - lastRotateTime);
 
+    if (gameOver && IsKeyPressed(KEY_ENTER))
+    {
+        gameOver = false;
+        grid.initialize();
+        scoreBoard.reset();
+        createRandomBlock();
+        lastDropTime = now;
+        return;
+    }
+
+    if (gameOver)
+        return;
+
     if (IsKeyDown(KEY_LEFT))
     {
         if (elapsedSinceLastMove >= moveDelay)
@@ -252,14 +265,13 @@ void Game::run()
     while (!WindowShouldClose())
     {
         BeginDrawing();
-
         ClearBackground(COLOURS[C_DARK_EGGPLANT_PURPLE]);
+
         scoreBoard.addScore(clearLines() * 100);
-        grid.draw();
-        scoreBoard.draw();
+        handleEvents();
+
         if (!gameOver)
         {
-            handleEvents();
             if (blockLockCheck())
             {
                 lockBlock();
@@ -270,8 +282,13 @@ void Game::run()
                     lockBlock();
                 }
             }
-            currentBlock.draw();
         }
+
+        grid.draw();
+        scoreBoard.draw();
+        
+        if (!gameOver)
+            currentBlock.draw();
 
         EndDrawing();
         frames++;

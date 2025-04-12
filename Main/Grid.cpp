@@ -33,7 +33,7 @@ uint Grid::getCellSize()
 
 void Grid::draw()
 {
-    DrawRectangle(position.x, position.y, cellSize * COLS, cellSize * ROWS, COLOURS[C_BLACK]);
+    DrawRectangle(position.x, position.y, cellSize * COLS + 1, cellSize * ROWS + 1, COLOURS[C_BLACK]);
     for (uint j = 0; j < ROWS; j += 1)
         for (uint i = 0; i < COLS; i += 1)
         {

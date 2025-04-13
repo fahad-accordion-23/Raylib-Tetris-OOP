@@ -9,18 +9,21 @@ class ScoreBoard
 {
 private:
     // Interface positioning
-    Rectangle foregroundRectangle, backgroundRectangle;
+    Rectangle foregroundRectangle, backgroundRectangle, nextRectangle;
     uint width, height;
     uint padding;
 
     // Text label
     Font font;
     uint size, spacing;
-    Position labelOffset;
+    Position scoreLabelOffset;
 
     // Score label
-    Position scoreOffset;
+    Position scoreValueLabelOffset;
     uint score;
+
+    // Next label
+    Position nextLabelOffset;
 
 public:
     ScoreBoard();

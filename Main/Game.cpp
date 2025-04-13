@@ -9,8 +9,8 @@ bool Game::bottomCollision()
     Position pos;
     for (uint i = 0; i < 4; i += 1)
     {
-        pos.x = currentBlock.getShape()[i].x + currentBlock.getPosition().x;
-        pos.y = currentBlock.getShape()[i].y + currentBlock.getPosition().y;
+        pos.x = blocks[CURRENT].getShape()[i].x + blocks[CURRENT].getPosition().x;
+        pos.y = blocks[CURRENT].getShape()[i].y + blocks[CURRENT].getPosition().y;
         if (pos.y >= ROWS - 1 || grid.grid[pos.y + 1][pos.x] != C_DARK_GREY)
         {
             return true;
@@ -24,8 +24,8 @@ bool Game::isBlockColliding()
     Position pos;
     for (uint i = 0; i < 4; i += 1)
     {
-        pos.x = currentBlock.getShape()[i].x + currentBlock.getPosition().x;
-        pos.y = currentBlock.getShape()[i].y + currentBlock.getPosition().y;
+        pos.x = blocks[CURRENT].getShape()[i].x + blocks[CURRENT].getPosition().x;
+        pos.y = blocks[CURRENT].getShape()[i].y + blocks[CURRENT].getPosition().y;
         if (pos.y < 0 || pos.y >= ROWS || pos.x >= COLS || pos.x < 0)
         {
             return true;
@@ -50,7 +50,7 @@ void Game::handleEvents()
         gameOver = false;
         grid.initialize();
         scoreBoard.reset();
-        createRandomBlock();
+        createBlock();
         lastDropTime = now;
         return;
     }
@@ -157,31 +157,39 @@ uint Game::clearLines()
     return cleared;
 }
 
-void Game::createRandomBlock()
+void Game::createBlock()
 {
-    currentBlock = blockMaker.createRandomBlock();
+    blocks[CURRENT] = blocks[NEXT_1];
+    blocks[NEXT_1] = blocks[NEXT_2];
+    blocks[NEXT_2] = blocks[NEXT_3];
+    blocks[NEXT_3] = blockMaker.createRandomBlock();
+
+    blocks[NEXT_3].move(10, 16);
+    blocks[NEXT_2].move(0, -4);
+    blocks[NEXT_1].move(0, -4);
+    blocks[CURRENT].move(-10, -8);
 }
 
 void Game::moveBlock(Direction dir)
 {
     if (dir == Direction::LEFT)
-        currentBlock.move(-1, 0);
+        blocks[CURRENT].move(-1, 0);
     else if (dir == Direction::RIGHT)
-        currentBlock.move(+1, 0);
+        blocks[CURRENT].move(+1, 0);
     else if (dir == Direction::UP)
-        currentBlock.move(0, -1);
+        blocks[CURRENT].move(0, -1);
     else if (dir == Direction::DOWN && !bottomCollision())
-        currentBlock.move(0, +1);
+        blocks[CURRENT].move(0, +1);
 
     bool isCollidng = isBlockColliding();
     if (isCollidng)
     {
         if (dir == Direction::LEFT)
-            currentBlock.move(+1, 0);
+            blocks[CURRENT].move(+1, 0);
         else if (dir == Direction::RIGHT)
-            currentBlock.move(-1, 0);
+            blocks[CURRENT].move(-1, 0);
         else if (dir == Direction::UP)
-            currentBlock.move(0, +1);
+            blocks[CURRENT].move(0, +1);
     }
 }
 
@@ -209,10 +217,10 @@ void Game::lockBlock()
 {
     for (uint i = 0; i < 4; i += 1)
     {
-        Position pos = currentBlock.getShape()[i];
-        pos.y += currentBlock.getPosition().y;
-        pos.x += currentBlock.getPosition().x;
-        grid.grid[pos.y][pos.x] = currentBlock.getColour();
+        Position pos = blocks[CURRENT].getShape()[i];
+        pos.y += blocks[CURRENT].getPosition().y;
+        pos.x += blocks[CURRENT].getPosition().x;
+        grid.grid[pos.y][pos.x] = blocks[CURRENT].getColour();
     }
     hasBottomCollided = false;
 }
@@ -220,35 +228,37 @@ void Game::lockBlock()
 void Game::rotateBlock(Direction dir)
 {
     if (dir == Direction::LEFT)
-        currentBlock.rotate(Direction::LEFT);
+        blocks[CURRENT].rotate(Direction::LEFT);
     else if (dir == Direction::RIGHT)
-        currentBlock.rotate(Direction::RIGHT);
+        blocks[CURRENT].rotate(Direction::RIGHT);
 
     if (isBlockColliding())
     {
         if (dir == Direction::LEFT)
-            currentBlock.rotate(Direction::RIGHT);
+            blocks[CURRENT].rotate(Direction::RIGHT);
         else if (dir == Direction::RIGHT)
-            currentBlock.rotate(Direction::LEFT);
+            blocks[CURRENT].rotate(Direction::LEFT);
     }
 }
 
 Game::Game()
     : grid(WIDTH, HEIGHT, { PADDING, PADDING }), blockMaker(grid.getCellSize(), { PADDING, PADDING }), 
     softDropDelay(300), hardDropDelay(100), moveDelay(150), rotateDelay(200), 
-    lockDelay(500), hasBottomCollided(false)
+    lockDelay(500), hasBottomCollided(false), gameOver(false)
 {
     std::srand(Clock::now().time_since_epoch().count());
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raylib Tetris");
     SetTargetFPS(FPS);
     initializeColours();
-    createRandomBlock();
+    createBlock();
+    createBlock();
+    createBlock();
+    createBlock();
 
     scoreBoard.initialize(
         { PADDING + WIDTH + PADDING, PADDING },
         WINDOW_WIDTH - PADDING - WIDTH - PADDING - PADDING,
-        WINDOW_HEIGHT - PADDING - PADDING
-    );
+        WINDOW_HEIGHT - PADDING - PADDING);
 
     lastDropTime = Clock::now() - hardDropDelay;
     lastMoveTime = Clock::now() - moveDelay;
@@ -275,7 +285,7 @@ void Game::run()
             if (blockLockCheck())
             {
                 lockBlock();
-                createRandomBlock();
+                createBlock();
                 if (isBlockColliding())
                 {
                     gameOver = true;
@@ -286,9 +296,14 @@ void Game::run()
 
         grid.draw();
         scoreBoard.draw();
-        
+
+        for (uint i = 1; i <= 3; i += 1)
+            blocks[i].draw();
+
         if (!gameOver)
-            currentBlock.draw();
+            blocks[CURRENT].draw();
+        else
+            DrawText("GAME OVER!", (WINDOW_WIDTH - MeasureText("GAME OVER!", 50)) / 2.0f, (WINDOW_HEIGHT - 50) / 2.0f, 50, COLOURS[C_BLACK]);
 
         EndDrawing();
         frames++;

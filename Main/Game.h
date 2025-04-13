@@ -22,12 +22,20 @@ WINDOW_WIDTH = WIDTH * 1.75f + PADDING + PADDING,
 WINDOW_HEIGHT = HEIGHT + PADDING + PADDING,
 FPS = 60;
 
+enum
+{
+    CURRENT,
+    NEXT_1,
+    NEXT_2,
+    NEXT_3
+};
+
 class Game
 {
 private:
     Grid grid;
     BlockMaker blockMaker;
-    Block currentBlock;
+    Block blocks[4];
     TimePoint lastDropTime, lastMoveTime, lastRotateTime, lastTouchDownTime;
     MS softDropDelay, hardDropDelay, moveDelay, rotateDelay, lockDelay;
     ScoreBoard scoreBoard;
@@ -36,7 +44,7 @@ private:
 
     bool bottomCollision();
     bool isBlockColliding();
-    void createRandomBlock();
+    void createBlock();
     void moveBlock(Direction dir);
     bool blockLockCheck();
     void lockBlock();
